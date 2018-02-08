@@ -1,4 +1,4 @@
-package org.glavo.viewer.common
+package org.glavo.viewer.binary
 
 import javafx.scene.control.TreeItem
 
@@ -15,11 +15,11 @@ abstract class FileComponent<Component : FileComponent<Component, Reader>, Reade
         super.setValue(this as Component)
     }
 
-    open val components: MutableList<Component>
-        get() = super.getChildren() as MutableList<Component>
+    open val components: MutableList<Component?>
+        get() = super.getChildren() as MutableList<Component?>
 
     open fun readContent(reader: Reader) {
-        components.forEach { it.readContent(reader) }
+        components.forEach { it!!.readContent(reader) }
     }
 
     open fun postRead(reader: Reader) {
@@ -27,20 +27,20 @@ abstract class FileComponent<Component : FileComponent<Component, Reader>, Reade
     }
 
     operator fun get(name: String): Component? {
-        return components.find { it.name == name }
+        return components.find { it?.name == name }
     }
 
-    fun add(name: String?, component: Component) {
+    fun add(name: String?, component: Component?) {
         if (name != null)
-            component.name = name
+            component?.name = name
         components.add(component)
     }
 
-    fun add(component: Component) {
+    fun add(component: Component?) {
         components.add(component)
     }
 
-    operator fun plusAssign(component: Component) {
+    operator fun plusAssign(component: Component?) {
         components += component
     }
 
@@ -49,6 +49,16 @@ abstract class FileComponent<Component : FileComponent<Component, Reader>, Reade
     }
 
     override fun toString(): String {
-        return "$name: $desc"
+        return when {
+            name != null && desc != null ->
+                "$name: $desc"
+            name != null ->
+                desc!!
+            desc != null ->
+                name!!
+            else ->
+                this::class.java.simpleName
+        }
     }
+
 }

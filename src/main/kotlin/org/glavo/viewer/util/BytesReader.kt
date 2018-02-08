@@ -4,7 +4,7 @@ import java.io.UTFDataFormatException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class BytesReader(val buf: ByteBuffer) {
+open class BytesReader(val buf: ByteBuffer) {
 
     @JvmOverloads
     constructor(arr: ByteArray, order: ByteOrder = ByteOrder.BIG_ENDIAN)
