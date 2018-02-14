@@ -12,12 +12,12 @@ This tool is base on [classpy](https://github.com/zxh0/classpy).
 
 ## Build
 ```shell
-gradle jar
+sbt gui/assembly
 ```
 
 ## Run
 ```shell
-gradle run
+sbt gui/run
 ```
 
 ## Screenshots
