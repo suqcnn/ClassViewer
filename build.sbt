@@ -21,7 +21,22 @@ lazy val jfx4s = (project in file("jfx4s"))
 lazy val gui = (project in file("gui"))
   .settings(
     name := "ClassViewer-gui",
-    version := "0.1",
+    version := "4.0",
     mainClass in assembly := Some("org.glavo.viewer.gui.Viewer"),
     commonSettings
-  ).dependsOn(jfx4s)
+  ).dependsOn(jfx4s, utils, common)
+
+lazy val common = (project in file("common"))
+  .settings(
+    name := "ClassViewer-common",
+    version := "4.0",
+    commonSettings
+  ).dependsOn(utils)
+
+lazy val utils = (project in file("utils"))
+  .settings(
+    name := "ClassViewer-utils",
+    version := "0.1",
+    libraryDependencies += "org.fusesource.jansi" % "jansi" % "1.17",
+    commonSettings
+  )
