@@ -26,7 +26,7 @@ const val ACC_ENUM          = 0x4000
 const val ACC_MODULE        = 0x8000
 const val ACC_MANDATED      = 0x8000
 
-infix inline fun Int.isAcc(acc: Int): Boolean {
+inline infix fun Int.isAcc(acc: Int): Boolean {
     return (this and acc) != 0
 }
 

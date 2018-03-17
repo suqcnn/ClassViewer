@@ -1,11 +1,12 @@
 package org.glavo.kotlinfx.application
 
-typealias Application = javafx.application.Application
+import javafx.application.Application
+import javafx.stage.Stage
 
-inline fun <reified T : Application> launch(vararg args: String) {
+inline fun <reified T : Application> launch(args: Array<String>) {
     Application.launch(T::class.java, *args)
 }
 
 fun Application.run() {
-    this.start(javafx.stage.Stage())
+    this.start(Stage())
 }
