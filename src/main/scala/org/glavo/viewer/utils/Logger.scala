@@ -6,7 +6,9 @@ import org.fusesource.jansi.{Ansi, AnsiConsole}
 
 abstract class Logger(var level: Logger.Level = Logger.Level.DEFAULT,
                       var writer: PrintWriter = new PrintWriter(new OutputStreamWriter(System.out)),
-                      var errorWriter: PrintWriter = new PrintWriter(new OutputStreamWriter(System.err))) {
+                      var errorWriter: PrintWriter = new PrintWriter(new OutputStreamWriter(System.err))) extends Cloneable {
+  def colored: Boolean
+
   def log(message: String = "", ex: Throwable = null)(level: Logger.Level): Unit
 
   def trace(message: String): Unit = log(message)(Logger.Level.TRACE)
@@ -30,9 +32,12 @@ abstract class Logger(var level: Logger.Level = Logger.Level.DEFAULT,
   def error(message: String): Unit = log(message)(Logger.Level.ERROR)
 
   def error(message: String, ex: Throwable): Unit = log(message, ex)(Logger.Level.ERROR)
+
+  override def clone(): Logger = super.clone().asInstanceOf[Logger]
 }
 
 object Logger {
+  val globalLogger: Logger = apply()
 
   final case class Level private(name: String, level: Int,
                                  color: Ansi.Color = Ansi.Color.DEFAULT) extends Ordered[Level] {
@@ -86,6 +91,8 @@ object Logger {
     }
 
     override def finalize(): Unit = AnsiConsole.systemUninstall()
+
+    override def colored: Boolean = true
   }
 
   final class NotColored(level: Level = Level.DEFAULT,
@@ -103,6 +110,7 @@ object Logger {
       writer.flush()
     }
 
+    override def colored: Boolean = false
   }
 
   def apply(level: Level = Level.DEFAULT,
