@@ -1,17 +1,49 @@
-@file:JvmName("App")
 package kotlinfx
 
-typealias Application = javafx.application.Application
+object App {
+    private lateinit var app: Helper
 
-typealias ConditionalFeature = javafx.application.ConditionalFeature
+    lateinit var stage: Stage
 
-typealias HostServices = javafx.application.HostServices
+    var onInit: () -> Unit = {}
+    var onStop: () -> Unit = {}
+    var stageInitializer: Stage.() -> Unit = {}
 
-typealias Preloader = javafx.application.Preloader
+    var autoShow: Boolean = true
 
-typealias JFXPlatform = javafx.application.Platform
+    class Helper : Application() {
+        var onStop: () -> Unit = {}
 
-inline fun <reified T : Application> launch(vararg args: String) = Application.launch(T::class.java, *args)
+        override fun init() {
+            app = this
+            onInit()
+        }
 
-@JvmName("launchWithArrayArgs")
-inline fun <reified T : Application> launch(args: Array<String>) = Application.launch(T::class.java, *args)
+        override fun start(primaryStage: Stage) {
+            App.stage = primaryStage
+            primaryStage.stageInitializer()
+            if (autoShow) {
+                stage.show()
+            }
+        }
+
+        override fun stop() {
+            onStop()
+        }
+    }
+
+    fun run(
+            args: Array<String>,
+            autoShow: Boolean = true,
+            onInit: () -> Unit = {},
+            onStop: () -> Unit = {},
+            stageInitializer: Stage.() -> Unit) {
+        this.onInit = onInit
+        this.onStop = onStop
+        this.stageInitializer = stageInitializer
+        this.autoShow = autoShow
+
+        launch<Helper>(args)
+    }
+
+}

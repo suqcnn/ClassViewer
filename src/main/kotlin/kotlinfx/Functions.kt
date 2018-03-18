@@ -1,4 +1,5 @@
 @file:JvmName("Functions")
+@file:Suppress("NOTHING_TO_INLINE")
 
 package kotlinfx
 

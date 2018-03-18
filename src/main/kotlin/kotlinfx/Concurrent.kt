@@ -23,12 +23,20 @@ fun Task<*>.startInNewThread() {
     Thread(this).start()
 }
 
-@JvmName("setOnScheduled")
-fun Task<*>.onScheduled(v: (WorkerStateEvent) -> Unit) {
-    this.onScheduled = v.asEventHandler()
+@JvmName("setOnSucceeded")
+inline fun Task<*>.onSucceeded(crossinline v: (WorkerStateEvent) -> Unit) {
+    this.onSucceeded = EventHandler { v(it) }
 }
 
-fun <V> Task<V>.onScheduled(v: (V) -> Unit) {
-    this.onScheduled = EventHandler { v(it.source.value as V) }
+inline fun <V> Task<V>.onSucceeded(crossinline v: (V) -> Unit) {
+    this.onSucceeded = EventHandler { v(it.source.value as V) }
 }
 
+@JvmName("setOnFailed")
+inline fun Task<*>.onFailed(crossinline v: (WorkerStateEvent) -> Unit) {
+    this.onSucceeded = EventHandler { v(it) }
+}
+
+inline fun Task<*>.onFailed(crossinline v: (Throwable) -> Unit) {
+    this.onSucceeded = EventHandler { v(it.source.exception) }
+}
