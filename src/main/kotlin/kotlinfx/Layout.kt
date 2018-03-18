@@ -10,6 +10,8 @@ typealias VBox = javafx.scene.layout.VBox
 
 typealias BorderPane = javafx.scene.layout.BorderPane
 
+typealias FlowPane = javafx.scene.layout.FlowPane
+
 inline fun pane(vararg children: Node, initializer: Pane.() -> Unit = {}): Pane {
     return Pane(*children).apply(initializer)
 }
@@ -75,5 +77,17 @@ inline fun borderPane(
     }.apply(initializer)
 }
 
+inline fun flowPane(orientation: Orientation = Orientation.HORIZONTAL, vararg children: Node, initializer: FlowPane.() -> Unit = {}): FlowPane {
+    return FlowPane(orientation, *children).apply(initializer)
+}
+
+@JvmName("flowPaneOfArray")
+inline fun flowPane(orientation: Orientation = Orientation.HORIZONTAL, children: Array<out Node>, initializer: FlowPane.() -> Unit = {}): FlowPane {
+    return FlowPane(orientation, *children).apply(initializer)
+}
+
+inline fun flowPane(orientation: Orientation = Orientation.HORIZONTAL, children: Collection<Node>, initializer: FlowPane.() -> Unit = {}): FlowPane {
+    return FlowPane(orientation).apply { this.children.addAll(children) }.apply(initializer)
+}
 
 //todo

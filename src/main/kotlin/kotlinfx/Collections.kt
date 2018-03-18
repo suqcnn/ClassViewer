@@ -1,4 +1,8 @@
+@file:JvmName("Collections")
+
 package kotlinfx
+
+import javafx.collections.FXCollections
 
 typealias ObservableArray<T> = javafx.collections.ObservableArray<T>
 
@@ -12,4 +16,6 @@ typealias ObservableSet<E> = javafx.collections.ObservableSet<E>
 
 typealias ObservableMap<K, V> = javafx.collections.ObservableMap<K, V>
 
-//todo
+fun <E> List<E>.observable(): ObservableList<E> = FXCollections.observableList(this)
+
+fun <E> observableListOf(vararg items: E): ObservableList<E> = FXCollections.observableArrayList(*items)

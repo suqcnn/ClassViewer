@@ -41,9 +41,6 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    // https://mvnrepository.com/artifact/org.fusesource.jansi/jansi
-    compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.17'
 }
 
 
