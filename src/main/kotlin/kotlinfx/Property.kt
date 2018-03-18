@@ -1,3 +1,5 @@
+@file:JvmName("Property")
+
 package kotlinfx
 
 typealias ReadOnlyProperty<T> = javafx.beans.property.ReadOnlyProperty<T>

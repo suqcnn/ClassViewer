@@ -1,3 +1,4 @@
+@file:JvmName("Button")
 package kotlinfx
 
 typealias Button = javafx.scene.control.Button

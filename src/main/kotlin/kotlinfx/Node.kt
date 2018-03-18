@@ -1,3 +1,5 @@
+@file:JvmName("Node")
+
 package kotlinfx
 
 typealias Node = javafx.scene.Node

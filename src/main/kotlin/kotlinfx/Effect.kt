@@ -1,3 +1,5 @@
+@file:JvmName("Effect")
+
 package kotlinfx
 
 typealias Effect = javafx.scene.effect.Effect

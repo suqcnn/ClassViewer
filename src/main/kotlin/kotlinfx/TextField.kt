@@ -1,3 +1,5 @@
+@file:JvmName("TextField")
+
 package kotlinfx
 
 typealias TextField = javafx.scene.control.TextField

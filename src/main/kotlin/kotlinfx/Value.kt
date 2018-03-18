@@ -1,3 +1,5 @@
+@file:JvmName("Value")
+
 package kotlinfx
 
 import kotlin.reflect.KProperty

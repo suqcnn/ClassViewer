@@ -7,9 +7,9 @@ typealias ConditionalFeature = javafx.application.ConditionalFeature
 
 typealias HostServices = javafx.application.HostServices
 
-typealias Platform = javafx.application.Platform
-
 typealias Preloader = javafx.application.Preloader
+
+typealias JFXPlatform = javafx.application.Platform
 
 inline fun <reified T : Application> launch(vararg args: String) = Application.launch(T::class.java, *args)
 

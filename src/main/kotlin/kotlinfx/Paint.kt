@@ -1,3 +1,5 @@
+@file:JvmName("Paint")
+
 package kotlinfx
 
 typealias Paint = javafx.scene.paint.Paint

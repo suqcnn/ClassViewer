@@ -1,3 +1,5 @@
+@file:JvmName("Tooltip")
+
 package kotlinfx
 
 typealias Tooltip = javafx.scene.control.Tooltip

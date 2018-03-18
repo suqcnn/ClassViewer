@@ -1,3 +1,5 @@
+@file:JvmName("Binding")
+
 package kotlinfx
 
 import java.util.concurrent.Callable

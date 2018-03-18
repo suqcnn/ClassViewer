@@ -1,3 +1,5 @@
+@file:JvmName("Label")
+
 package kotlinfx
 
 typealias Label = javafx.scene.control.Label

@@ -41,6 +41,10 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-javafx
+    //compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.22.5'
+
 }
 
 
@@ -75,5 +79,14 @@ task fatJar(type: Jar) {
 
 task run(type: JavaExec, dependsOn: fatJar) {
     main = "-jar"
+    //noinspection GroovyAssignabilityCheck
     args fatJar.archivePath
 }
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
+

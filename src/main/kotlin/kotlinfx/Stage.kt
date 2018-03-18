@@ -1,3 +1,5 @@
+@file:JvmName("Stage")
+
 package kotlinfx
 
 typealias Stage = javafx.stage.Stage

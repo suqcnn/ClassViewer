@@ -1,5 +1,5 @@
 @file:JvmName("AccessFlags")
-@file:Suppress("NOTHING_TO_INLINE")
+@file:Suppress("NOTHING_TO_INLINE", "unused")
 
 package org.glavo.viewer.classfile.jvm
 

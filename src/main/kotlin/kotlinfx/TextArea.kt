@@ -1,3 +1,5 @@
+@file:JvmName("TextArea")
+
 package kotlinfx
 
 typealias TextArea = javafx.scene.control.TextArea

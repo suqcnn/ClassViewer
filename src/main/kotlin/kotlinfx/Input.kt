@@ -1,3 +1,5 @@
+@file:JvmName("Input")
+
 package kotlinfx
 
 typealias Clipboard = javafx.scene.input.Clipboard

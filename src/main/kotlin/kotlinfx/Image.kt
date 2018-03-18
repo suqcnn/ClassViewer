@@ -1,3 +1,4 @@
+@file:JvmName("Image")
 package kotlinfx
 
 typealias Image = javafx.scene.image.Image

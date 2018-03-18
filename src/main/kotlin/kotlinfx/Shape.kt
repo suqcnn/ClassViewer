@@ -1,3 +1,5 @@
+@file:JvmName("Shape")
+
 package kotlinfx
 
 typealias Shape = javafx.scene.shape.Shape
