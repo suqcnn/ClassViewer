@@ -1,27 +1,28 @@
 @file:JvmName("Window")
+
 package kotlinfx
 
 typealias Window = javafx.stage.Window
 
 typealias WindowEvent = javafx.stage.WindowEvent
 
-fun Window.onCloseRequest(v: (WindowEvent) -> Unit) {
-    this.onCloseRequest = v.asEventHandler()
+inline fun Window.onCloseRequest(crossinline v: (WindowEvent) -> Unit) {
+    this.onCloseRequest = EventHandler { v(it) }
 }
 
-fun Window.onHidden(v: (WindowEvent) -> Unit) {
-    this.onHidden = v.asEventHandler()
+inline fun Window.onHidden(crossinline v: (WindowEvent) -> Unit) {
+    this.onHidden = EventHandler { v(it) }
 }
 
-fun Window.onHiding(v: (WindowEvent) -> Unit) {
-    this.onHiding = v.asEventHandler()
+inline fun Window.onHiding(crossinline v: (WindowEvent) -> Unit) {
+    this.onHiding = EventHandler { v(it) }
 }
 
-fun Window.onShowing(v: (WindowEvent) -> Unit) {
-    this.onShowing = v.asEventHandler()
+inline fun Window.onShowing(crossinline v: (WindowEvent) -> Unit) {
+    this.onShowing = EventHandler { v(it) }
 }
 
-fun Window.onShown(v: (WindowEvent) -> Unit) {
-    this.onShown = v.asEventHandler()
+inline fun Window.onShown(crossinline v: (WindowEvent) -> Unit) {
+    this.onShown = EventHandler { v(it) }
 }
 
