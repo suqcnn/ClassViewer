@@ -1,68 +1,106 @@
 package org.glavo.viewer.util
 
-class Logger(var colored: Boolean = true) {
+import kotlinfx.*
+import org.glavo.viewer.gui.Settings
+import java.util.concurrent.LinkedBlockingQueue
+
+object Logger {
+    var color: Boolean by Settings.colorLogProperty
+    var debug: Boolean by Settings.debugProperty
+
 
     fun setting(name: String, value: Any?) {
-        if (colored) {
-            println("\u001B[35m\u001B[1m[Setting]\u001B[0m \u001b[34m\u001b[1m$name\u001b[0m=\u001b[1m$value\u001b[0m")
-        } else {
-            println("[Setting] $name=$value")
+        LoggerUtils.runLater {
+            if (color)
+                println("\u001B[35m\u001B[1m[Setting]\u001B[0m \u001b[34m\u001b[1m$name\u001b[0m=\u001b[1m$value\u001b[0m")
+            else
+                println("[Setting] $name=$value")
+
         }
     }
 
-    fun trace(obj: Any?) {
-        if (colored)
-            print("\u001b[36m\u001b[1m[TRACE]\u001b[0m ")
-        else
-            print("[TRACE] ")
-        println(obj)
+    fun trace(message: Any, exception: Throwable? = null) {
+        LoggerUtils.runLater {
+            if (color)
+                println("\u001b[36m\u001b[1m[TRACE]\u001b[0m $message")
+            else
+                println("[TRACE] $message")
+            exception?.printStackTrace(System.out)
+        }
     }
 
-    fun debug(obj: Any) {
-        //if (!debug) return
-        if (colored)
-            print("\u001b[34m\u001b[1m[DEBUG]\u001b[0m ")
-        else
-            print("[DEBUG] ")
-        println(obj)
+    fun debug(message: Any, exception: Throwable? = null) {
+        LoggerUtils.runLater {
+            if (color)
+                println("\u001b[34m\u001b[1m[DEBUG]\u001b[0m $message")
+            else
+                println("[DEBUG] $message")
+            exception?.printStackTrace(System.out)
+        }
     }
 
-    fun info(message: Any?) {
-        if (colored)
-            print("\u001b[32m\u001b[1m[INFO]\u001b[0m ")
-        else
-            print("[INFO] ")
-        println(message)
+    fun info(message: Any, exception: Throwable? = null) {
+        LoggerUtils.runLater {
+            if (color)
+                println("\u001b[32m\u001b[1m[INFO]\u001b[0m $message")
+            else
+                println("[INFO] $message")
+            exception?.printStackTrace(System.out)
+        }
     }
 
-    fun warning(message: Any?) {
-        if (colored)
-            print("\u001b[33m\u001b[1m[WARNING]\u001b[0m ")
-        else
-            print("[WARNING] ")
-        println(message)
+    fun warning(message: Any, exception: Throwable? = null) {
+        LoggerUtils.runLater {
+            if (color)
+                println("\u001b[33m\u001b[1m[WARNING]\u001b[0m $message")
+            else
+                println("[WARNING] $message")
+            exception?.printStackTrace(System.out)
+        }
     }
 
-    fun error(message: Any?) {
-        if (colored)
-            print("\u001b[31m\u001b[1m[ERROR]\u001b[0m ")
-        else
-            print("[ERROR] ")
-        System.err.println(message)
+    fun error(message: Any, exception: Throwable? = null) {
+        LoggerUtils.runLater {
+            if (color)
+                System.err.println("\u001b[31m\u001b[1m[ERROR]\u001b[0m $message")
+            else
+                System.err.println("[ERROR] $message")
+            exception?.printStackTrace(System.err)
+
+        }
+    }
+}
+
+object LoggerUtils : Thread() {
+    private class ExitException : Throwable() {
+        override fun fillInStackTrace(): Throwable = this
     }
 
+    private val queue: LinkedBlockingQueue<() -> Unit> = LinkedBlockingQueue()
 
-    fun error(exception: Throwable?) {
-        error(exception?.message ?: "", exception)
+
+    init {
+        this.isDaemon = true
+        this.start()
     }
 
+    override fun run() {
+        try {
+            while (true) {
+                queue.poll()?.invoke()
+            }
+        } catch (_: ExitException) {
+        } catch (e: Exception) {
+            e.printStackTrace()
+            System.exit(1)
+        }
+    }
 
-    fun error(message: Any?, exception: Throwable?) {
-        if (colored)
-            println("\u001b[31m\u001b[1m[ERROR]\u001b[0m $message")
-        else
-            println("[ERROR] $message")
+    fun exit() {
+        queue += { throw ExitException() }
+    }
 
-        exception?.printStackTrace(System.err) ?: println(null)
+    fun runLater(f: () -> Unit) {
+        queue += f
     }
 }

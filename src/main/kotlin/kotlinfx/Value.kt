@@ -1,4 +1,5 @@
-@file:JvmName("Value")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 
 package kotlinfx
 
@@ -38,6 +39,22 @@ typealias WritableSetValue<E> = javafx.beans.value.WritableSetValue<E>
 
 typealias WritableMapValue<K, V> = javafx.beans.value.WritableMapValue<K, V>
 
+inline fun Observable.onInvalidate(crossinline op: (Observable) -> Unit): Subscription {
+    val l = InvalidationListener { op(it) }
+    this.addListener(l)
+    return Subscription {
+        this.removeListener(l)
+    }
+}
+
+inline fun <T> ObservableValue<T>.onChange(
+        crossinline listener: (observable: ObservableValue<out T>, oldValue: T, newValue: T) -> Unit): Subscription {
+    val l: ChangeListener<T> = ChangeListener { observable, oldValue, newValue -> listener(observable, oldValue, newValue) }
+    this.addListener(l)
+    return Subscription {
+        this.removeListener(l)
+    }
+}
 
 operator fun ObservableBooleanValue.getValue(thisRef: Any?, property: KProperty<*>): Boolean {
     return this.get()

@@ -1,4 +1,5 @@
-@file:JvmName("Scene")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 
 package kotlinfx
 

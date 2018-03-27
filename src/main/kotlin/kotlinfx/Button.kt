@@ -1,4 +1,6 @@
-@file:JvmName("Button")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
+
 package kotlinfx
 
 typealias Button = javafx.scene.control.Button

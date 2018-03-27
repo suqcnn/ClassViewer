@@ -1,4 +1,6 @@
-@file:JvmName("FileChooser")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
+
 package kotlinfx
 
 typealias FileChooser = javafx.stage.FileChooser

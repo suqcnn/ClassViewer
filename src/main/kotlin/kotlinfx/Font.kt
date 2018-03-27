@@ -1,4 +1,6 @@
-@file:JvmName("Font")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
+
 package kotlinfx
 
 typealias Font = javafx.scene.text.Font

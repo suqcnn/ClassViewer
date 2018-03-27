@@ -1,4 +1,5 @@
-@file:JvmName("Window")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 
 package kotlinfx
 

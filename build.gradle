@@ -1,5 +1,7 @@
+import org.apache.tools.ant.filters.EscapeUnicode
+
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.31'
 
     repositories {
         mavenCentral()
@@ -45,6 +47,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-javafx
     //compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.22.5'
 
+    // https://mvnrepository.com/artifact/org.fxmisc.richtext/richtextfx
+    compile group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.8.2'
+
+    compile 'com.google.code.gson:gson:2.8.2'
+
+    // https://mvnrepository.com/artifact/com.github.salomonbrys.kotson/kotson
+    compile group: 'com.github.salomonbrys.kotson', name: 'kotson', version: '2.5.0'
+
 }
 
 
@@ -81,6 +91,13 @@ task run(type: JavaExec, dependsOn: fatJar) {
     main = "-jar"
     //noinspection GroovyAssignabilityCheck
     args fatJar.archivePath
+}
+
+tasks.withType(ProcessResources).each { task ->
+    task.from(task.getSource()) {
+        include '**/*.properties'
+        filter(EscapeUnicode)
+    }
 }
 
 kotlin {

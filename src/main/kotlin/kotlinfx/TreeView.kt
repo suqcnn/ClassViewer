@@ -1,4 +1,5 @@
-@file:JvmName("TreeView")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 
 package kotlinfx
 

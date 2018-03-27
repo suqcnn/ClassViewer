@@ -1,4 +1,5 @@
-@file:JvmName("Orientation")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 
 package kotlinfx
 

@@ -1,4 +1,6 @@
-@file:JvmName("Event")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
+
 package kotlinfx
 
 typealias ActionEvent = javafx.event.ActionEvent

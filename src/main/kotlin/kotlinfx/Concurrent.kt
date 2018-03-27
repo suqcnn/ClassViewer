@@ -1,4 +1,5 @@
-@file:JvmName("Concurrent")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 @file:Suppress("UNCHECKED_CAST")
 
 package kotlinfx

@@ -1,4 +1,5 @@
-@file:JvmName("TabPane")
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
 
 package kotlinfx
 

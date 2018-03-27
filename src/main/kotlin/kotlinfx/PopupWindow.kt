@@ -1,3 +1,6 @@
+@file:JvmName("KotlinFX")
+@file:JvmMultifileClass
+
 package kotlinfx
 
 typealias PopupWindow = javafx.stage.PopupWindow
