@@ -2,7 +2,7 @@
 
 package org.glavo.viewer.util
 
-import kotlinfx.*
+import javafx.scene.text.Font
 
 val fontFamily: Regex = """-fx-font-family:\s*"([^"]+)"\s*;""".toRegex()
 

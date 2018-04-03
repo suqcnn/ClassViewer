@@ -1,7 +1,12 @@
 package org.glavo.viewer.gui
 
+import javafx.application.Application
+import javafx.scene.Scene
 import javafx.stage.Stage
+import javafx.stage.StageStyle
 import kotlinfx.*
+import kotlinfx.application.launch
+import kotlinfx.scene.scene
 
 class Viewer : Application() {
     companion object {
@@ -26,7 +31,7 @@ class Viewer : Application() {
         stage.apply {
             if (!Settings.useSystemTitleBar) initStyle(StageStyle.UNDECORATED)
 
-            scene = kotlinfx.scene(width = Settings.defaultWidth, height = Settings.defaultHeight) {
+            scene = scene(width = Settings.defaultWidth, height = Settings.defaultHeight) {
                 this@Viewer.scene = this
                 enableDragAndDrop()
             }

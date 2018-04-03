@@ -1,12 +1,15 @@
 package org.glavo.viewer.gui
 
+import javafx.application.Application
+import javafx.beans.binding.*
+import javafx.beans.property.*
+import javafx.scene.text.Font
 import kotlinfx.*
 import org.glavo.viewer.util.*
-import java.nio.file.Files
-import java.nio.file.Paths
+import java.nio.file.*
 import java.util.*
+import java.util.concurrent.Callable
 import kotlin.collections.LinkedHashMap
-
 
 object Settings {
     val viewerDataPath = run {
@@ -58,9 +61,9 @@ object Settings {
             doubleProperty(settingProperties.doublePropertyOrUpdate("viewer.ui.font.size", 15.0))
 
     @get:JvmName("uiFontBinding")
-    val uiFontBinding: ObjectBinding<Font> = Bindings.createObjectBinding(uiFontFamilyProperty, uiFontSizeProperty) {
+    val uiFontBinding: ObjectBinding<Font> = Bindings.createObjectBinding(Callable {
         Font.font(uiFontFamily, uiFontSize).apply { Logger.setting("viewer.ui.font", this) }
-    }
+    }, uiFontFamilyProperty, uiFontSizeProperty)
 
     @get:JvmName("textFontFamilyProperty")
     val textFontFamilyProperty: StringProperty =
@@ -70,9 +73,9 @@ object Settings {
             doubleProperty(settingProperties.doublePropertyOrUpdate("viewer.text.font.size", 15.0))
 
     @get:JvmName("textFontBinding")
-    val textFontBinding: ObjectBinding<Font> = Bindings.createObjectBinding(textFontFamilyProperty, textFontSizeProperty) {
+    val textFontBinding: ObjectBinding<Font> = Bindings.createObjectBinding(Callable {
         Font.font(textFontFamily, textFontSize).apply { Logger.setting("viewer.text.font", this) }
-    }
+    }, textFontFamilyProperty, textFontSizeProperty)
 
     @get:JvmName("skinProperty")
     val skinProperty: StringProperty =
