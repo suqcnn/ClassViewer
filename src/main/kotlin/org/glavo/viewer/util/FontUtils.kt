@@ -4,8 +4,6 @@ package org.glavo.viewer.util
 
 import javafx.scene.text.Font
 
-val fontFamily: Regex = """-fx-font-family:\s*"([^"]+)"\s*;""".toRegex()
-
 private val fonts: List<String> = Font.getFamilies()
 
 val defaultUiFontFamily: String =
@@ -22,6 +20,6 @@ val defaultTextFontFamily: String =
             find { it == "Consolas" }
                     ?: find { it == "Source Code Pro" }
                     ?: find { it == "Fira Code" }
-                    ?: find {it == "DejaVu Sans Mono"}
+                    ?: find { it == "DejaVu Sans Mono" }
                     ?: "Monospaced"
         }

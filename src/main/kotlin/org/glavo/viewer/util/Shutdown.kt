@@ -10,7 +10,13 @@ object ShutdownHook : Thread() {
     private val list = Collections.synchronizedList(mutableListOf<() -> Unit>())
 
     override fun run() {
-        list.forEach { it() }
+        list.forEach {
+            try {
+                it()
+            } catch (e: Exception) {
+                Logger.warning(exception = e)
+            }
+        }
         Logger.info("Exit")
         LoggerUtils.exit()
         LoggerUtils.join()

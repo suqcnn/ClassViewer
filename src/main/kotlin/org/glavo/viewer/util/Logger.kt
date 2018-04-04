@@ -1,12 +1,20 @@
 package org.glavo.viewer.util
 
-import kotlinfx.*
-import org.glavo.viewer.gui.Settings
+import org.glavo.viewer.Settings
 import java.util.concurrent.LinkedBlockingQueue
 
 object Logger {
-    var color: Boolean by Settings.colorLogProperty
-    var debug: Boolean by Settings.debugProperty
+    var color: Boolean
+        inline get() = Settings.data.colorLog
+        inline set(value) {
+            Settings.data.colorLog = value
+        }
+
+    var debug: Boolean
+        inline get() = Settings.data.debugLog
+        inline set(value) {
+            Settings.data.debugLog = value
+        }
 
 
     fun setting(name: String, value: Any?) {
@@ -19,7 +27,7 @@ object Logger {
         }
     }
 
-    fun trace(message: Any, exception: Throwable? = null) {
+    fun trace(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
                 println("\u001b[36m\u001b[1m[TRACE]\u001b[0m $message")
@@ -29,7 +37,7 @@ object Logger {
         }
     }
 
-    fun debug(message: Any, exception: Throwable? = null) {
+    fun debug(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
                 println("\u001b[34m\u001b[1m[DEBUG]\u001b[0m $message")
@@ -39,7 +47,7 @@ object Logger {
         }
     }
 
-    fun info(message: Any, exception: Throwable? = null) {
+    fun info(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
                 println("\u001b[32m\u001b[1m[INFO]\u001b[0m $message")
@@ -49,7 +57,7 @@ object Logger {
         }
     }
 
-    fun warning(message: Any, exception: Throwable? = null) {
+    fun warning(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
                 println("\u001b[33m\u001b[1m[WARNING]\u001b[0m $message")
@@ -59,7 +67,7 @@ object Logger {
         }
     }
 
-    fun error(message: Any, exception: Throwable? = null) {
+    fun error(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
                 System.err.println("\u001b[31m\u001b[1m[ERROR]\u001b[0m $message")
@@ -81,7 +89,6 @@ object LoggerUtils : Thread() {
 
     init {
         this.isDaemon = true
-        this.start()
     }
 
     override fun run() {

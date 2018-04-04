@@ -1,9 +1,31 @@
+package org.glavo.viewer.util
+
+import org.intellij.lang.annotations.Language
+
+const val UI_CLASS = "viewer-ui"
+
+const val TEXT_CLASS = "viewer-text"
+
+@Language("CSS")
+val defaultCSS: String =
+        """
+.$TEXT_CLASS {
+    -fx-font-family: "$defaultTextFontFamily";
+    -fx-font-size: 15;
+}
+
+.$UI_CLASS {
+    -fx-font-family: "$defaultUiFontFamily";
+    -fx-font-size: 15;
+}
+
 .root {
     -fx-background-radius: 20;
 }
 
 .button {
     -fx-background-color: transparent;
+    -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em; /* 4 8 4 8 */
 }
 
 .button:hover {
@@ -29,4 +51,4 @@
 
 .combo-box .arrow, .combo-box .arrow-button{
     -fx-background-color: transparent;
-}
+}"""

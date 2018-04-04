@@ -9,6 +9,9 @@ abstract class FileType {
         val fileTypes: List<FileType> = Collections.unmodifiableList(arrayListOf<FileType>().apply {
             ServiceLoader.load(FileType::class.java).forEach { this.add(it) }
         })
+
+        @JvmStatic
+        fun valueOf(name: String): FileType = TODO()
     }
 
     abstract fun accept(uri: URI): Boolean
