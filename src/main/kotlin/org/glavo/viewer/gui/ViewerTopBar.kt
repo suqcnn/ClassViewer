@@ -1,6 +1,9 @@
 package org.glavo.viewer.gui
 
 import javafx.application.Platform
+import javafx.beans.binding.Bindings
+import javafx.collections.ListChangeListener
+import javafx.collections.WeakListChangeListener
 import javafx.scene.control.*
 import javafx.scene.input.KeyCombination
 import javafx.scene.input.MouseButton
@@ -13,17 +16,9 @@ import kotlinfx.stage.stage
 import org.glavo.viewer.Settings
 import org.glavo.viewer.util.UI_CLASS
 import org.glavo.viewer.util.loadIcon
+import java.beans.EventHandler
 import java.util.*
-
-val CloseActiveIcon = loadIcon("/icons/ui/closeActive.png")
-val MaximizeIcon = loadIcon("/icons/ui/maximize.png")
-val MinimizeIcon = loadIcon("/icons/ui/minimize.png")
-val RestoreIcon = loadIcon("/icons/ui/restore.png")
-
-val OpenFileIcon = loadIcon("/icons/ui/menu/openFile.png")
-val OpenFolderIcon = loadIcon("/icons/ui/menu/openFolder.png")
-val RefreshIcon = loadIcon("/icons/actions/refresh.png")
-
+import java.util.concurrent.Callable
 
 class ViewerTopBar(val viewer: Viewer) : VBox() {
     val titleBar: ViewerTitleBar? = if (Settings.data.useSystemTitleBar) null else ViewerTitleBar(viewer)
@@ -31,7 +26,7 @@ class ViewerTopBar(val viewer: Viewer) : VBox() {
 
     init {
         titleBar?.also { this.children += it }
-        this.children.add(menuBar)
+        this.children += menuBar
         Platform.runLater {
             menuBar.isUseSystemMenuBar = Settings.data.useSystemMenuBar
         }
@@ -42,15 +37,20 @@ class ViewerTopBar(val viewer: Viewer) : VBox() {
 class ViewerTitleBar(val viewer: Viewer) : ToolBar() {
     companion object {
         val resource: ResourceBundle = ResourceBundle.getBundle("org.glavo.viewer.gui.TitleBar")
+
+        val CloseActiveIcon = loadIcon("/icons/ui/closeActive.png")
+        val MaximizeIcon = loadIcon("/icons/ui/maximize.png")
+        val MinimizeIcon = loadIcon("/icons/ui/minimize.png")
+        val RestoreIcon = loadIcon("/icons/ui/restore.png")
     }
 
     val logoView = icon24.createView()
     val titleLabel = label()
 
-    val closeActiveButton = button(graphic = CloseActiveIcon.createView()) { styleClass += UI_CLASS }
-    val maximizeButton = button(graphic = MaximizeIcon.createView()) { styleClass += UI_CLASS }
-    val minimizeButton = button(graphic = MinimizeIcon.createView()) { styleClass += UI_CLASS }
-    val restoreButton = button(graphic = RestoreIcon.createView()) { styleClass += UI_CLASS }
+    val closeActiveButton = button(graphic = CloseActiveIcon.createView())
+    val maximizeButton = button(graphic = MaximizeIcon.createView())
+    val minimizeButton = button(graphic = MinimizeIcon.createView())
+    val restoreButton = button(graphic = RestoreIcon.createView())
 
     var xOffset = 0.0
     var yOffset = 0.0
@@ -60,9 +60,6 @@ class ViewerTitleBar(val viewer: Viewer) : ToolBar() {
         maximizeButton.tooltip = tooltip(resource.getString("MaximizeButton.tooltip"))
         minimizeButton.tooltip = tooltip(resource.getString("MinimizeButton.tooltip"))
         restoreButton.tooltip = tooltip(resource.getString("RestoreButton.tooltip"))
-
-
-        styleClass += UI_CLASS
 
         onMouseClicked {
             if (it.button == MouseButton.PRIMARY && it.clickCount == 2) {
@@ -100,7 +97,7 @@ class ViewerTitleBar(val viewer: Viewer) : ToolBar() {
         restoreButton.onAction { viewer.stage.isMaximized = false }
         closeActiveButton.onAction { viewer.stage.close() }
 
-        val noop1 = text(" ") { styleClass += UI_CLASS }
+        val noop1 = text(" ")
         val noop2 = hbox()
 
         HBox.setHgrow(noop1, Priority.NEVER)
@@ -125,6 +122,13 @@ class ViewerTitleBar(val viewer: Viewer) : ToolBar() {
 class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
     companion object {
         val resource: ResourceBundle = ResourceBundle.getBundle("org.glavo.viewer.gui.Menu")
+
+        val OpenFileIcon = loadIcon("/icons/actions/openFile.png")
+        val OpenFolderIcon = loadIcon("/icons/actions/openFolder.png")
+
+        val BulletIcon = loadIcon("/icons/ui/bullet.png")
+
+        val RefreshIcon = loadIcon("/icons/actions/refresh.png")
     }
 
     inner class FileMenu : Menu(resource.getString("FileMenu.text")) {
@@ -155,6 +159,23 @@ class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
     }
 
     inner class WindowMenu : Menu(resource.getString("WindowMenu.text")) {
+        private inner class WindowItem(val v: Viewer) : MenuItem() {
+            init {
+                textProperty().bind(Bindings.createStringBinding(Callable {
+                    if (v.title == null) {
+                        resource.getString("WindowMenu.Windows.emptyText")
+                    } else {
+                        v.title
+                    }
+                }, v.titleProperty))
+                if (v === viewer) {
+                    graphic = BulletIcon.createView()
+                } else {
+                    onAction { v.stage.toFront() }
+                }
+            }
+        }
+
         val newWindowItem =
                 menuItem(resource.getString("WindowMenu.NewWindowItem.text")) {
                     accelerator = KeyCombination.keyCombination("Shortcut+N")
@@ -164,13 +185,35 @@ class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
                 }
 
         val nextWindowItem =
-                menuItem(resource.getString("WindowMenu.NewWindowItem.text")) {
+                menuItem(resource.getString("WindowMenu.NextWindowItem.text")) {
                     accelerator = KeyCombination.keyCombination("Shift+Shortcut+[")
+                    onAction {
+                        val size = viewerList.size
+                        if (size != 0 && size != 1) {
+                            val idx = viewerList.indexOf(viewer)
+                            if (idx == viewerList.size - 1) {
+                                viewerList.firstOrNull()?.stage?.toFront()
+                            } else {
+                                viewerList[idx + 1].stage.toFront()
+                            }
+                        }
+                    }
                 }
 
         val previousWindowItem =
                 menuItem(resource.getString("WindowMenu.PreviousWindowItem.text")) {
                     accelerator = KeyCombination.keyCombination("Shift+Shortcut+]")
+                    onAction {
+                        val size = viewerList.size
+                        if (size != 0 && size != 1) {
+                            val idx = viewerList.indexOf(viewer)
+                            if (idx == 0) {
+                                viewerList.lastOrNull()?.stage?.toFront()
+                            } else {
+                                viewerList[idx - 1].stage.toFront()
+                            }
+                        }
+                    }
                 }
 
         private val base = listOf(
@@ -183,7 +226,16 @@ class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
 
         private fun update() {
             items.setAll(base)
-            items.addAll(viewerList.map { menuItem() })
+            items += viewerList.map { WindowItem(it) }
+        }
+
+        val listener = ListChangeListener<Viewer> {
+            update()
+        }
+
+        init {
+            viewerList.addListener(WeakListChangeListener(listener))
+            update()
         }
     }
 

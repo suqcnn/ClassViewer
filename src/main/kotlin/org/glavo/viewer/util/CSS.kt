@@ -16,7 +16,7 @@ val defaultCSS: String =
 
 .$UI_CLASS {
     -fx-font-family: "$defaultUiFontFamily";
-    -fx-font-size: 15;
+    -fx-font-size: 14;
 }
 
 .root {

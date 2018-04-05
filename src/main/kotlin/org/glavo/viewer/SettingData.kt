@@ -16,7 +16,7 @@ constructor(
         var useSystemTitleBar: Boolean = true,
 
         @SerializedName("ui.useSystemMenuBar")
-        var useSystemMenuBar: Boolean = true,
+        var useSystemMenuBar: Boolean = isMac,
 
         @SerializedName("ui.width")
         var width: Double = 1150.0,
