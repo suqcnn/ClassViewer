@@ -2,10 +2,11 @@
 
 package org.glavo.viewer.util
 
+import kala.nio.*
+import java.nio.ByteBuffer
 import java.util.*
-import kotlin.experimental.and
 
-class HexString(data: ByteArray) {
+class HexString(buffer: ByteBuffer) {
     companion object {
         const val BYTES_PER_ROW = 16
 
@@ -16,6 +17,8 @@ class HexString(data: ByteArray) {
         inline fun byteToString(b: Byte): String = byteStrings[b.toInt() and 0xFF]
     }
 
+    val data = buffer.asList()
+
     val rowHeaderText: String = StringBuilder((data.size / BYTES_PER_ROW + 1) * 9).apply {
         var i = 0
         while (i < data.size) {
@@ -25,13 +28,13 @@ class HexString(data: ByteArray) {
     }.toString()
 
     val byteText: String = StringBuilder(data.size * 3).apply {
-        data.asList().asSequence().chunked(BYTES_PER_ROW).forEach {
+        data.chunked(BYTES_PER_ROW).forEach {
             it.joinTo(this, separator = " ", postfix = "\n", transform = ::byteToString)
         }
     }.toString()
 
     val asciiText: String = StringBuilder((BYTES_PER_ROW + 1) * (data.size / BYTES_PER_ROW + 1)).apply {
-        data.asList().asSequence().chunked(BYTES_PER_ROW).forEach {
+        data.chunked(BYTES_PER_ROW).forEach {
             it.joinTo(this, separator = "", postfix = "\n") {
                 if (it.toChar() in '!'..'~') {
                     it.toChar().toString()

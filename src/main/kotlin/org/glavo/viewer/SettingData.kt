@@ -22,11 +22,11 @@ constructor(
         var width: Double = 1150.0,
 
         @SerializedName("ui.height")
-        var height: Double = 1150.0,
+        var height: Double = 725.0,
 
         @SerializedName("ui.title")
         var title: String = "ClassViewer",
 
         @SerializedName("ui.skin")
-        var skin: String = ""
+        var skin: String = "MODENA"
 )

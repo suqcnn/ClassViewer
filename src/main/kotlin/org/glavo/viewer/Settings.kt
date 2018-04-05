@@ -21,7 +21,15 @@ object Settings {
             }
         }
         else {
-            SettingData()
+            SettingData().apply {
+                try {
+                    settingDataPath.bufferedWriter().use {
+                        GlobalGson.toJson(this, it)
+                    }
+                } catch (e: Exception) {
+                    Logger.warning(exception = e)
+                }
+            }
         }
     }.apply {
         Logger.info("Settings=$this")
@@ -38,13 +46,7 @@ object Settings {
     }.toURL().toExternalForm()
 
     init {
-        ShutdownHook += {
-            try {
-                settingDataPath.writeText(GlobalGson.toJson(data))
-            } catch (e: Exception) {
-                Logger.warning(exception =  e)
-            }
-        }
         LoggerUtils.start()
+        ShutdownHook
     }
 }

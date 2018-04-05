@@ -1,12 +1,15 @@
 package org.glavo.viewer.gui
 
-import javafx.scene.*
+import javafx.application.Platform
 import javafx.scene.control.*
+import javafx.scene.input.KeyCombination
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import javafx.scene.layout.VBox
 import kotlinfx.scene.*
 import kotlinfx.scene.control.*
+import kotlinfx.stage.stage
 import org.glavo.viewer.Settings
 import org.glavo.viewer.util.UI_CLASS
 import org.glavo.viewer.util.loadIcon
@@ -17,35 +20,49 @@ val MaximizeIcon = loadIcon("/icons/ui/maximize.png")
 val MinimizeIcon = loadIcon("/icons/ui/minimize.png")
 val RestoreIcon = loadIcon("/icons/ui/restore.png")
 
-val titleBarResource: ResourceBundle = ResourceBundle.getBundle("org.glavo.viewer.gui.TitleBar")
-val menuResource: ResourceBundle = ResourceBundle.getBundle("org.glavo.viewer.gui.Menu")
+val OpenFileIcon = loadIcon("/icons/ui/menu/openFile.png")
+val OpenFolderIcon = loadIcon("/icons/ui/menu/openFolder.png")
+val RefreshIcon = loadIcon("/icons/actions/refresh.png")
 
-fun Viewer.buildTopBar(): Node {
-    val titleBar = if (Settings.data.useSystemTitleBar) null else buildTitleBar()
-    val menuBar = if (Settings.data.useSystemMenuBar) null else buildMenuBar()
-    TODO()
+
+class ViewerTopBar(val viewer: Viewer) : VBox() {
+    val titleBar: ViewerTitleBar? = if (Settings.data.useSystemTitleBar) null else ViewerTitleBar(viewer)
+    val menuBar = ViewerMenuBar(viewer)
+
+    init {
+        titleBar?.also { this.children += it }
+        this.children.add(menuBar)
+        Platform.runLater {
+            menuBar.isUseSystemMenuBar = Settings.data.useSystemMenuBar
+        }
+    }
+
 }
 
-private fun Viewer.buildTitleBar(): ToolBar {
-    val viewer = this
-
-    val titleLabel = label()
+class ViewerTitleBar(val viewer: Viewer) : ToolBar() {
+    companion object {
+        val resource: ResourceBundle = ResourceBundle.getBundle("org.glavo.viewer.gui.TitleBar")
+    }
 
     val logoView = icon24.createView()
+    val titleLabel = label()
+
     val closeActiveButton = button(graphic = CloseActiveIcon.createView()) { styleClass += UI_CLASS }
     val maximizeButton = button(graphic = MaximizeIcon.createView()) { styleClass += UI_CLASS }
     val minimizeButton = button(graphic = MinimizeIcon.createView()) { styleClass += UI_CLASS }
     val restoreButton = button(graphic = RestoreIcon.createView()) { styleClass += UI_CLASS }
 
-    closeActiveButton.tooltip = tooltip(titleBarResource.getString("CloseActiveButton.tooltip"))
-    maximizeButton.tooltip = tooltip(titleBarResource.getString("MaximizeButton.tooltip"))
-    minimizeButton.tooltip = tooltip(titleBarResource.getString("MinimizeButton.tooltip"))
-    restoreButton.tooltip = tooltip(titleBarResource.getString("RestoreButton.tooltip"))
+    var xOffset = 0.0
+    var yOffset = 0.0
 
-    return toolBar {
+    init {
+        closeActiveButton.tooltip = tooltip(resource.getString("CloseActiveButton.tooltip"))
+        maximizeButton.tooltip = tooltip(resource.getString("MaximizeButton.tooltip"))
+        minimizeButton.tooltip = tooltip(resource.getString("MinimizeButton.tooltip"))
+        restoreButton.tooltip = tooltip(resource.getString("RestoreButton.tooltip"))
+
+
         styleClass += UI_CLASS
-        var xOffset = 0.0
-        var yOffset = 0.0
 
         onMouseClicked {
             if (it.button == MouseButton.PRIMARY && it.clickCount == 2) {
@@ -96,16 +113,84 @@ private fun Viewer.buildTitleBar(): ToolBar {
         HBox.setHgrow(closeActiveButton, Priority.NEVER)
 
         items.addAll(logoView, noop1, titleLabel, noop2, minimizeButton,
-                if (stage.isMaximized)
+                if (viewer.stage.isMaximized)
                     restoreButton
                 else
                     maximizeButton,
                 closeActiveButton)
+
     }
 }
 
-private fun Viewer.buildMenuBar(): MenuBar {
-    val viewer = this
+class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
+    companion object {
+        val resource: ResourceBundle = ResourceBundle.getBundle("org.glavo.viewer.gui.Menu")
+    }
 
-    TODO()
+    inner class FileMenu : Menu(resource.getString("FileMenu.text")) {
+        val openFileItem =
+                menuItem(resource.getString("FileMenu.OpenFileItem.text"), OpenFileIcon.createView()) {
+                    accelerator = KeyCombination.keyCombination("Shortcut+O")
+                }
+
+        val openFolderItem =
+                menuItem(resource.getString("FileMenu.OpenFolderItem.text"), OpenFolderIcon.createView()) {
+                    accelerator = KeyCombination.keyCombination("Shortcut+K")
+                }
+
+        val exitItem =
+                menuItem(resource.getString("FileMenu.ExitItem.text")) {
+
+                }
+
+        init {
+            exitItem.onAction { Platform.exit() }
+            this.items.addAll(
+                    openFileItem,
+                    openFolderItem,
+                    separatorMenuItem(),
+                    exitItem
+            )
+        }
+    }
+
+    inner class WindowMenu : Menu(resource.getString("WindowMenu.text")) {
+        val newWindowItem =
+                menuItem(resource.getString("WindowMenu.NewWindowItem.text")) {
+                    accelerator = KeyCombination.keyCombination("Shortcut+N")
+                    onAction {
+                        Platform.runLater { Viewer().start(stage()) }
+                    }
+                }
+
+        val nextWindowItem =
+                menuItem(resource.getString("WindowMenu.NewWindowItem.text")) {
+                    accelerator = KeyCombination.keyCombination("Shift+Shortcut+[")
+                }
+
+        val previousWindowItem =
+                menuItem(resource.getString("WindowMenu.PreviousWindowItem.text")) {
+                    accelerator = KeyCombination.keyCombination("Shift+Shortcut+]")
+                }
+
+        private val base = listOf(
+                newWindowItem,
+                separatorMenuItem(),
+                nextWindowItem,
+                previousWindowItem,
+                separatorMenuItem()
+        )
+
+        private fun update() {
+            items.setAll(base)
+            items.addAll(viewerList.map { menuItem() })
+        }
+    }
+
+    val fileMenu = FileMenu()
+    val windowMenu = WindowMenu()
+
+    init {
+        menus.addAll(fileMenu, windowMenu)
+    }
 }
