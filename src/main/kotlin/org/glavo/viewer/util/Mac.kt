@@ -1,12 +1,13 @@
 package org.glavo.viewer.util
 
-object Mac {
-    val isMac: Boolean = System.getProperty("os.name", "") == "Mac OS X"
+import org.glavo.viewer.Settings
 
-    init {
-        if (isMac) {
-            System.setProperty("apple.laf.useScreenMenuBar", "true")
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "ClassViewer")
-        }
+val isMac: Boolean = System.getProperty("os.name", "") == "Mac OS X"
+
+object Mac {
+    val init by lazy {
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", Settings.data.title)
+        System.setProperty("apple.awt.application.name", Settings.data.title)
+        Unit
     }
 }

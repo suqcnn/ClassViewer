@@ -48,5 +48,8 @@ object Settings {
     init {
         LoggerUtils.start()
         ShutdownHook
+        if(isMac) {
+            Mac.init
+        }
     }
 }
