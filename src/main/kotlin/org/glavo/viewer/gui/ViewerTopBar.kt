@@ -229,6 +229,7 @@ class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
             items += viewerList.map { WindowItem(it) }
         }
 
+        @Suppress("MemberVisibilityCanBePrivate")
         val listener = ListChangeListener<Viewer> {
             update()
         }
@@ -237,6 +238,10 @@ class ViewerMenuBar(val viewer: Viewer) : MenuBar() {
             viewerList.addListener(WeakListChangeListener(listener))
             update()
         }
+    }
+
+    inner class HelpMenu : Menu(resource.getString("HelpMenu.text")) {
+
     }
 
     val fileMenu = FileMenu()
