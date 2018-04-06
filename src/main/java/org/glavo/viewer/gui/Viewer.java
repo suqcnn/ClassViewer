@@ -19,7 +19,7 @@ import java.util.Objects;
 @SuppressWarnings("WeakerAccess")
 public final class Viewer extends Application {
     public static void main(String[] args) {
-        Settings.INSTANCE.getCssURL();
+        String ignore = Settings.getCssURL();
         Application.launch(Viewer.class, args);
     }
 
@@ -86,8 +86,7 @@ public final class Viewer extends Application {
         ViewerPane pane = new ViewerPane(this);
 
         Scene scene = new Scene(pane, Settings.getData().getWidth(), Settings.getData().getHeight());
-        scene.getStylesheets().add(Settings.INSTANCE.getCssURL());
-
+        scene.getStylesheets().add(Settings.getCssURL());
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> viewers.remove(this));
         stage.show();

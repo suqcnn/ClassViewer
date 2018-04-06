@@ -16,15 +16,13 @@ public final class Mac {
         if (!hasInit) {
             synchronized (Mac.class) {
                 if (!hasInit) {
-                    synchronized (Mac.class) {
-                        hasInit = true;
-                        System.setProperty(
-                                "com.apple.mrj.application.apple.menu.about.name",
-                                Settings.getData().getTitle());
-                        System.setProperty(
-                                "apple.awt.application.name",
-                                Settings.getData().getTitle());
-                    }
+                    hasInit = true;
+                    System.setProperty(
+                            "com.apple.mrj.application.apple.menu.about.name",
+                            Settings.getTitle());
+                    System.setProperty(
+                            "apple.awt.application.name",
+                            Settings.getTitle());
                 }
             }
         }

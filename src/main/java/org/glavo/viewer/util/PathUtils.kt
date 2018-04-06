@@ -41,6 +41,7 @@ fun Path.toURL(): URL {
     return URL(URLDecoder.decode(this.toUri().toString(), "UTF-8"))
 }
 
+@JvmName("uriToPath")
 fun URI.toPath(): Path? {
     return when (this.scheme) {
         "jar" -> {
@@ -66,4 +67,5 @@ fun URI.toPath(): Path? {
     }
 }
 
+@JvmName("urlToPath")
 fun URL.toPath(): Path? = this.toURI().toPath()

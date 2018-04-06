@@ -10,29 +10,32 @@ public final class ViewerTopBar extends VBox {
     @NotNull
     public final Viewer viewer;
 
-    @Nullable
     private final ViewerTitleBar titleBar;
 
-    @NotNull
     private final ViewerMenuBar menuBar;
+
+    private final ViewerToolBar toolBar;
 
     public ViewerTopBar(@NotNull Viewer viewer) {
         this.viewer = viewer;
-        if (Settings.getData().getUseSystemTitleBar()) {
+        if (Settings.getData().isUseSystemTitleBar()) {
             titleBar = null;
         } else {
             titleBar = new ViewerTitleBar(viewer);
         }
 
-        this.menuBar = new ViewerMenuBar(viewer);
+        menuBar = new ViewerMenuBar(viewer);
+        toolBar = new ViewerToolBar(viewer);
 
-        if (Settings.getData().getUseSystemMenuBar()) {
+
+        if (Settings.getData().isUseSystemMenuBar()) {
             Platform.runLater(() -> menuBar.setUseSystemMenuBar(true));
         }
         if (titleBar != null) {
             getChildren().add(titleBar);
         }
         getChildren().add(menuBar);
+        getChildren().add(toolBar);
     }
 
     @Nullable
@@ -43,5 +46,10 @@ public final class ViewerTopBar extends VBox {
     @NotNull
     public ViewerMenuBar getMenuBar() {
         return menuBar;
+    }
+
+    @NotNull
+    public ViewerToolBar getToolBar() {
+        return toolBar;
     }
 }

@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.glavo.viewer.util.CssUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ResourceBundle;

@@ -8,7 +8,7 @@ import kala.nio.file.bufferedWriter
 import kala.nio.file.div
 import kala.nio.file.exists
 import kotlinfx.observable
-import org.glavo.viewer.util.GlobalGson
+import org.glavo.viewer.util.JsonUtils.gson
 import org.glavo.viewer.util.Logger
 import org.glavo.viewer.util.ShutdownHook
 import java.lang.reflect.Type
@@ -37,23 +37,23 @@ object RecentFileDeserializer : JsonDeserializer<RecentFile> {
 }
 
 object RecentFiles {
-    val path = (Settings.settingsPath / "recentfiles.json").toAbsolutePath()
+    val path = (Settings.getSettingsPath() / "recentfiles.json").toAbsolutePath()
     private val tpe = (object : TypeToken<List<RecentFile>>() {}).type
     val recentfiles: ObservableList<RecentFile> = LinkedList<RecentFile>().observable().apply {
         if (path.exists()) {
             try {
                 Logger.info("Load recent files from $path")
                 path.bufferedReader().use {
-                    this.addAll(GlobalGson.fromJson<List<RecentFile>>(it, tpe))
+                    this.addAll(gson.fromJson<List<RecentFile>>(it, tpe))
                 }
             } catch (e: Exception) {
-                Logger.warning(exception = e)
+                Logger.warning("", e)
             }
         }
 
-        ShutdownHook += {
+        ShutdownHook.runLater {
             path.bufferedWriter().use {
-                GlobalGson.toJson(this, tpe, it)
+                gson.toJson(this, tpe, it)
             }
         }
     }

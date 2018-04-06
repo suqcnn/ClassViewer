@@ -1,7 +1,7 @@
 package org.glavo.viewer.gui;
 
 import javafx.scene.layout.BorderPane;
-import org.glavo.viewer.util.CSSKt;
+import org.glavo.viewer.util.CssUtils;
 import org.jetbrains.annotations.NotNull;
 
 public final class ViewerPane extends BorderPane {
@@ -10,7 +10,7 @@ public final class ViewerPane extends BorderPane {
 
     public ViewerPane(@NotNull Viewer viewer) {
         this.viewer = viewer;
-        this.getStyleClass().add(CSSKt.UI_CLASS);
+        this.getStyleClass().add(CssUtils.UI_CLASS);
         this.setTop(new ViewerTopBar(viewer));
     }
 
