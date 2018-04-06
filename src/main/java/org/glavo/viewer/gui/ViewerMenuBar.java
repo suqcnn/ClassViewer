@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.WeakListChangeListener;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -11,7 +12,13 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.glavo.viewer.util.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +42,8 @@ public final class ViewerMenuBar extends MenuBar {
 
     public static final KeyCombination NextWindowAccelerator = KeyCombination.keyCombination("Shortcut+Shift+]");
     public static final KeyCombination PreviousWindowAccelerator = KeyCombination.keyCombination("Shortcut+Shift+[");
+
+    private static final String HOME_URI = "https://github.com/ClassViewer/ClassViewer";
 
     private static final int WINDOW_MENU_WINDOWS_ITEMS_OFFSET = 6;
 
@@ -173,19 +182,55 @@ public final class ViewerMenuBar extends MenuBar {
         }
     }
 
+    public final class HelpMenu extends Menu {
+        private final MenuItem aboutItem;
+
+        HelpMenu() {
+            super(resources.getString("HelpMenu.text"));
+            aboutItem = new MenuItem(resources.getString("HelpMenu.AboutItem.text"));
+            aboutItem.setOnAction(event -> showAboutDialog());
+
+            getItems().add(aboutItem);
+        }
+
+        private void showAboutDialog() {
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            ImageView view = new ImageView(Viewer.logo128());
+            view.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                Logger.info("Open Home Page");
+                ViewerMenuBar.this.viewer.getHostServices().showDocument(HOME_URI);
+            });
+
+            BorderPane pane = new BorderPane();
+            pane.setCenter(view);
+            pane.setOnMouseClicked(event -> stage.close());
+
+            Scene scene = new Scene(pane);
+            scene.setFill(Color.TRANSPARENT);
+
+            stage.setScene(scene);
+            stage.setTitle("About");
+            stage.show();
+        }
+    }
+
+
     @NotNull
     public final Viewer viewer;
 
     private final FileMenu fileMenu;
-
     private final WindowMenu windowMenu;
+    private final HelpMenu helpMenu;
 
     public ViewerMenuBar(@NotNull Viewer viewer) {
         this.viewer = viewer;
 
         fileMenu = new FileMenu();
         windowMenu = new WindowMenu();
-        getMenus().addAll(fileMenu, windowMenu);
+        helpMenu = new HelpMenu();
+        getMenus().addAll(fileMenu, windowMenu, helpMenu);
     }
 
     @NotNull
@@ -196,5 +241,10 @@ public final class ViewerMenuBar extends MenuBar {
     @NotNull
     public WindowMenu getWindowMenu() {
         return windowMenu;
+    }
+
+    @NotNull
+    public HelpMenu getHelpMenu() {
+        return helpMenu;
     }
 }
