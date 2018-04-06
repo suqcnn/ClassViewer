@@ -15,6 +15,11 @@ public final class ViewerToolBar extends ToolBar {
 
     public static final Image RefreshIcon = loadImage("/icons/actions/refresh.png");
 
+    private static final Tooltip OpenFileButtonTooltip = new ViewerTooltip(resources.getString("OpenFileButton.tooltip"));
+    private static final Tooltip OpenFolderButtonTooltip = new ViewerTooltip(resources.getString("OpenFolderButton.tooltip"));
+    private static final Tooltip RefreshButtonTooltip = new ViewerTooltip(resources.getString("RefreshButton.tooltip"));
+
+
     @NotNull
     public final Viewer viewer;
 
@@ -33,9 +38,9 @@ public final class ViewerToolBar extends ToolBar {
         openFolderButton.setGraphic(new ImageView(ViewerMenuBar.OpenFolderIcon));
         refreshButton.setGraphic(new ImageView(RefreshIcon));
 
-        openFileButton.setTooltip(new Tooltip(resources.getString("OpenFileButton.tooltip")));
-        openFolderButton.setTooltip(new Tooltip(resources.getString("OpenFolderButton.tooltip")));
-        refreshButton.setTooltip(new Tooltip(resources.getString("RefreshButton.tooltip")));
+        openFileButton.setTooltip(OpenFileButtonTooltip);
+        openFolderButton.setTooltip(OpenFolderButtonTooltip);
+        refreshButton.setTooltip(RefreshButtonTooltip);
 
         getItems().addAll(
                 openFileButton, openFolderButton, new Separator(Orientation.VERTICAL),

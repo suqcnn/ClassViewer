@@ -17,8 +17,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.glavo.viewer.util.CssUtils;
+import org.glavo.viewer.RecentFile;
+import org.glavo.viewer.RecentFiles;
 import org.glavo.viewer.util.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,9 +49,47 @@ public final class ViewerMenuBar extends MenuBar {
     private static final int WINDOW_MENU_WINDOWS_ITEMS_OFFSET = 6;
 
     public final class FileMenu extends Menu {
+        class RecentFileItem extends MenuItem {
+            private final RecentFile file;
+
+            RecentFileItem(RecentFile file) {
+                this.file = file;
+                if (file.getType().getIcon() != null) {
+                    setGraphic(new ImageView(file.getType().getIcon()));
+                }
+                setText(file.getUri().toString());
+            }
+
+            @NotNull
+            public RecentFile getFile() {
+                return file;
+            }
+        }
+
         private final MenuItem openFileItem;
         private final MenuItem openFolderItem;
         private final MenuItem exitItem;
+        private final Menu recentFilesMenu;
+
+        private final ListChangeListener<RecentFile> listener = c -> {
+            while (c.next()) {
+                if (c.wasPermutated()) {
+                    for (int i = c.getFrom(); i < c.getTo(); i++) {
+                        getItems().set(
+                                i,
+                                new RecentFileItem(RecentFiles.get(i)));
+                    }
+                } else if (c.wasRemoved()) {
+                    getItems().remove(c.getFrom(), c.getTo());
+                } else if (c.wasAdded()) {
+                    ArrayList<RecentFileItem> l = new ArrayList<>();
+                    for (RecentFile f : c.getAddedSubList()) {
+                        l.add(new RecentFileItem(f));
+                    }
+                    getItems().addAll(c.getFrom(), l);
+                }
+            }
+        };
 
         FileMenu() {
             super(resources.getString("FileMenu.text"));
@@ -70,7 +108,15 @@ public final class ViewerMenuBar extends MenuBar {
             //TODO: openFolderItem.setOnAction(event -> {});
             exitItem.setOnAction(event -> Platform.exit());
 
-            getItems().setAll(openFileItem, openFolderItem, new SeparatorMenuItem(), exitItem);
+            recentFilesMenu = new Menu(resources.getString("FileMenu.RecentFilesMenu.text"));
+
+            for (RecentFile file : RecentFiles.getRecentFiles()) {
+                recentFilesMenu.getItems().add(new RecentFileItem(file));
+            }
+
+            RecentFiles.addListener(new WeakListChangeListener<>(listener));
+
+            getItems().setAll(openFileItem, openFolderItem, recentFilesMenu, new SeparatorMenuItem(), exitItem);
         }
 
         @NotNull
@@ -113,7 +159,6 @@ public final class ViewerMenuBar extends MenuBar {
                     for (Viewer v : c.getAddedSubList()) {
                         l.add(new WindowItem(ViewerMenuBar.this.viewer, v));
                     }
-                    System.out.println(l);
                     getItems().addAll(c.getFrom() + WINDOW_MENU_WINDOWS_ITEMS_OFFSET, l);
                 }
             }

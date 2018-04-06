@@ -92,6 +92,12 @@ public final class Viewer extends Application {
         stage.show();
     }
 
+    public void addTab(@NotNull ViewerTab tab) {
+        Objects.requireNonNull(tab);
+        getTabPane().getTabs().add(getTabPane().getSelectionModel().getSelectedIndex() + 1, tab);
+        getTabPane().getSelectionModel().select(tab);
+    }
+
     @NotNull
     public StringProperty titleProperty() {
         return this.titleProperty;
@@ -119,5 +125,10 @@ public final class Viewer extends Application {
     @NotNull
     public ViewerPane getPane() {
         return (ViewerPane) getScene().getRoot();
+    }
+
+    @NotNull
+    public ViewerTabPane getTabPane() {
+        return getPane().getTabPane();
     }
 }

@@ -3,8 +3,6 @@ package org.glavo.viewer.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.glavo.viewer.RecentFile;
-import org.glavo.viewer.RecentFileDeserializer;
-import org.glavo.viewer.RecentFileSerializer;
 
 public final class JsonUtils {
     private JsonUtils() {
@@ -14,7 +12,7 @@ public final class JsonUtils {
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .setLenient()
-            .registerTypeAdapter(RecentFile.class, RecentFileSerializer.INSTANCE)
-            .registerTypeAdapter(RecentFile.class, RecentFileDeserializer.INSTANCE)
+            .registerTypeAdapter(RecentFile.class, RecentFile.serializer)
+            .registerTypeAdapter(RecentFile.class, RecentFile.deserializer)
             .create();
 }

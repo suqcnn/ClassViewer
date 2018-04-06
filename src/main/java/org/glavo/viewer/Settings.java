@@ -71,7 +71,7 @@ public final class Settings {
             }
         }
 
-        cssURL = UrlUtils.pathToURL(css).toExternalForm();
+        cssURL = PathUtils.toUrl(css).toExternalForm();
         Logger.start();
         ShutdownHook.init();
         if (Mac.isMac) {
