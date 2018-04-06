@@ -4,19 +4,20 @@ import org.glavo.viewer.Settings
 import java.util.concurrent.LinkedBlockingQueue
 
 object Logger {
+    @JvmStatic
     var color: Boolean
         inline get() = Settings.data.colorLog
         inline set(value) {
             Settings.data.colorLog = value
         }
-
+    @JvmStatic
     var debug: Boolean
         inline get() = Settings.data.debugLog
         inline set(value) {
             Settings.data.debugLog = value
         }
 
-
+    @JvmStatic
     fun setting(name: String, value: Any?) {
         LoggerUtils.runLater {
             if (color)
@@ -27,6 +28,8 @@ object Logger {
         }
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun trace(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
@@ -37,6 +40,8 @@ object Logger {
         }
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun debug(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
@@ -47,6 +52,8 @@ object Logger {
         }
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun info(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
@@ -57,6 +64,8 @@ object Logger {
         }
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun warning(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)
@@ -67,6 +76,8 @@ object Logger {
         }
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun error(message: Any? = "", exception: Throwable? = null) {
         LoggerUtils.runLater {
             if (color)

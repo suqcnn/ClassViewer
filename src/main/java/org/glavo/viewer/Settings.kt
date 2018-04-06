@@ -11,6 +11,7 @@ object Settings {
 
     val settingDataPath = (settingsPath / "settings.json").toAbsolutePath()
 
+    @JvmStatic
     var data: SettingData = run {
         if (settingDataPath.exists()) try {
             Logger.info("Loading Settings from ${settingDataPath}")
@@ -48,8 +49,8 @@ object Settings {
     init {
         LoggerUtils.start()
         ShutdownHook
-        if(isMac) {
-            Mac.init
+        if(Mac.isMac) {
+            Mac.init()
         }
     }
 }
