@@ -1,5 +1,4 @@
-# ClassViewer
-
+# ClassViewer  [![Gitter](https://badges.gitter.im/ClassViewer/ClassViewer.svg)](https://gitter.im/ClassViewer/ClassViewer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ClassViewer is a GUI tool for investigating Java class files.
 
 This tool is base on [classpy](https://github.com/zxh0/classpy). 

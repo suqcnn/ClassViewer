@@ -70,25 +70,4 @@ public abstract class FileType implements Predicate<URI> {
     public abstract boolean test(@NotNull URI uri);
 
     public abstract void open(@NotNull Viewer viewer, @NotNull URI uri) throws Exception;
-
-    public static abstract class WithTab extends FileType {
-        public static ViewerTab defaultTab(@NotNull URI uri) {
-            ViewerTab tab = new ViewerTab();
-            tab.setUserData(new ViewerTab.Data(uri));
-
-            ProgressIndicator progressIndicator = new ProgressIndicator();
-            progressIndicator.setMaxWidth(75);
-            progressIndicator.setMaxHeight(75);
-
-            tab.setContent(new BorderPane(progressIndicator));
-            return tab;
-        }
-
-        public abstract ViewerTab openTab(@NotNull Viewer viewer, @NotNull URI uri) throws Exception;
-
-        @Override
-        public void open(@NotNull Viewer viewer, @NotNull URI uri) throws Exception {
-            viewer.addTab(openTab(viewer, uri));
-        }
-    }
 }
