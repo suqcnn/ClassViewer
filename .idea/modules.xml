@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ClassViewer.iml" filepath="$PROJECT_DIR$/ClassViewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ClassViewer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ClassViewer_main.iml" group="ClassViewer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ClassViewer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ClassViewer_test.iml" group="ClassViewer" />
+    </modules>
+  </component>
+</project>

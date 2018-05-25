@@ -45,6 +45,10 @@ public class BinaryPane extends ScrollPane {
         );
     }
 
+    private void selectBytesRange(int start, int end) {
+
+    }
+
     @NotNull
     public TextArea getRowHeaderText() {
         return textArea1;

@@ -148,7 +148,7 @@ public final class ViewerMenuBar extends MenuBar {
                     for (int i = c.getFrom(); i < c.getTo(); i++) {
                         getItems().set(
                                 i + WINDOW_MENU_WINDOWS_ITEMS_OFFSET,
-                                new WindowItem(ViewerMenuBar.this.viewer, Viewer.viewers.get(i)));
+                                new WindowItem(ViewerMenuBar.this.viewer, Viewer.viewers().get(i)));
                     }
                 } else if (c.wasRemoved()) {
                     getItems().remove(
@@ -178,21 +178,21 @@ public final class ViewerMenuBar extends MenuBar {
             newWindowItem.setOnAction(event -> new Viewer().start(new Stage()));
             closeWindowItem.setOnAction(event -> viewer.getStage().close());
             nextWindowItem.setOnAction(event -> {
-                int idx = Viewer.viewers.indexOf(ViewerMenuBar.this.viewer);
-                int size = Viewer.viewers.size();
+                int idx = Viewer.viewers().indexOf(ViewerMenuBar.this.viewer);
+                int size = Viewer.viewers().size();
                 if (idx == size - 1) {
-                    Viewer.viewers.get(0).getStage().toFront();
+                    Viewer.viewers().get(0).getStage().toFront();
                 } else {
-                    Viewer.viewers.get(idx + 1).getStage().toFront();
+                    Viewer.viewers().get(idx + 1).getStage().toFront();
                 }
             });
             previousWindowItem.setOnAction(event -> {
-                int idx = Viewer.viewers.indexOf(ViewerMenuBar.this.viewer);
-                int size = Viewer.viewers.size();
+                int idx = Viewer.viewers().indexOf(ViewerMenuBar.this.viewer);
+                int size = Viewer.viewers().size();
                 if (idx == 0) {
-                    Viewer.viewers.get(size - 1).getStage().toFront();
+                    Viewer.viewers().get(size - 1).getStage().toFront();
                 } else {
-                    Viewer.viewers.get(idx - 1).getStage().toFront();
+                    Viewer.viewers().get(idx - 1).getStage().toFront();
                 }
             });
 
@@ -200,10 +200,10 @@ public final class ViewerMenuBar extends MenuBar {
                     newWindowItem, closeWindowItem, new SeparatorMenuItem(),
                     nextWindowItem, previousWindowItem, new SeparatorMenuItem()
             );
-            for (Viewer v : Viewer.viewers) {
+            for (Viewer v : Viewer.viewers()) {
                 getItems().add(new WindowItem(viewer, v));
             }
-            Viewer.viewers.addListener(new WeakListChangeListener<>(listener));
+            Viewer.viewers().addListener(new WeakListChangeListener<>(listener));
         }
     }
 
